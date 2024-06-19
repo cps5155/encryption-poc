@@ -59,7 +59,6 @@ public class PrivateKeyConfig {
     public RsaEncryptionService rsaEncryptionService(RsaEncryptor rsaEncryptor, RsaDecryptor rsaDecryptor,
                                                      Cipher rsaCipher,
                                                      @Nullable AlgorithmParameterSpec rsaParamSpec) {
-        return new RsaEncryptionService(rsaEncryptor, rsaDecryptor, rsaCipher)
-                .setAlgorithmParameterSpec(rsaParamSpec);
+        return new RsaEncryptionService(rsaEncryptor, rsaDecryptor, rsaCipher, rsaParamSpec);
     }
 }
