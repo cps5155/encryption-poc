@@ -1,9 +1,11 @@
 package com.schmitt.encryption.poc.config;
 
+import com.schmitt.encryption.poc.cipher.CipherFactory;
 import com.schmitt.encryption.poc.decryptor.RsaDecryptor;
 import com.schmitt.encryption.poc.encryptor.RsaEncryptor;
 import com.schmitt.encryption.poc.service.RsaEncryptionService;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -55,10 +57,12 @@ public class PrivateKeyConfig {
                 MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT);
     }
 
+    // This is an example - an Encryption Service would be configured based on a specific provider's needs
+    // i.e. maybe Provider A uses AES cipher w/ no padding but Provider B uses OAEP w/ Sha-256 and MGF1 w/ Sha-256 padding
     @Bean
     public RsaEncryptionService rsaEncryptionService(RsaEncryptor rsaEncryptor, RsaDecryptor rsaDecryptor,
-                                                     Cipher rsaCipher,
+                                                     @Qualifier("oaepWithSHA256AndMGF1PaddingCipherFactory") CipherFactory cipherFactory,
                                                      @Nullable AlgorithmParameterSpec rsaParamSpec) {
-        return new RsaEncryptionService(rsaEncryptor, rsaDecryptor, rsaCipher, rsaParamSpec);
+        return new RsaEncryptionService(rsaEncryptor, rsaDecryptor, cipherFactory, rsaParamSpec);
     }
 }
