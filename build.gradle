@@ -1,30 +1,57 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.6.4'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "io.freefair.lombok" version "8.6"
+    id 'java'
+    id 'org.springframework.boot' version '2.6.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "io.freefair.lombok" version "8.6"
+    id "com.diffplug.spotless" version "6.10.0"
 }
 
 group = 'com.schmitt.encryption'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.bouncycastle:bcpkix-jdk18on:1.76'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.76'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+spotless {
+    ratchetFrom 'origin/master'
+    java {
+        target '**/src/**/java/**/*.java'
+        importOrder()
+        removeUnusedImports()
+        toggleOffOn()
+        palantirJavaFormat()
+        endWithNewline()
+        custom 'noWildcardImports', {
+            if (it.contains('*;\n')) {
+                throw new Error('No wildcard imports allowed')
+            }
+        } as Closure<String>
+    }
+    freshmark {
+        target '**/*.md'
+    }
+    json {
+        target '**/*.json'
+        targetExclude '**/*.tfvars.json'
+        gson()
+                .sortByKeys()
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
