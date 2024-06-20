@@ -1,11 +1,6 @@
 package com.schmitt.encryption.poc.decryptor;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
+import com.schmitt.encryption.poc.exceptions.IncorrectPrivateKeyException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -13,6 +8,11 @@ import java.security.PrivateKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
 import java.util.Optional;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,13 +34,16 @@ public class RsaDecryptor implements Decryptor {
     }
 
     @Override
-    public Optional<String> decrypt(String encryptedContent, Cipher decryptionCipher, AlgorithmParameterSpec algorithmParameterSpec) {
+    public Optional<String> decrypt(
+            String encryptedContent, Cipher decryptionCipher, AlgorithmParameterSpec algorithmParameterSpec) {
         try {
             decryptionCipher.init(Cipher.DECRYPT_MODE, privateKey, algorithmParameterSpec);
 
             return decryptUsingInitializedCipher(encryptedContent, decryptionCipher);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-            log.error("Caught exception attempting to initialize decryption cipher with Algorithm ParameterSpec: {}", e.getMessage());
+            log.error(
+                    "Caught exception attempting to initialize decryption cipher with Algorithm ParameterSpec: {}",
+                    e.getMessage());
         }
 
         return Optional.empty();
@@ -59,6 +62,8 @@ public class RsaDecryptor implements Decryptor {
             decryptedContent = new String(encryptedContentBytes, StandardCharsets.UTF_8);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             log.error("Caught exception attempting to decrypt: {}", e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new IncorrectPrivateKeyException("Incorrect private key used to decrypt data.");
         }
 
         return Optional.ofNullable(decryptedContent);

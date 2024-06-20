@@ -1,11 +1,10 @@
 package com.schmitt.encryption.poc.decoder;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class Base64Decoder {
