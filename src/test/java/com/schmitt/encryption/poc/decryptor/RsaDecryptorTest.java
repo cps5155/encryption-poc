@@ -1,17 +1,18 @@
 package com.schmitt.encryption.poc.decryptor;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
-
 import com.schmitt.encryption.poc.encryptor.RsaEncryptor;
 import com.schmitt.encryption.poc.exceptions.IncorrectPrivateKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.Optional;
-import javax.crypto.Cipher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.crypto.Cipher;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 
 @SpringBootTest
 public class RsaDecryptorTest {
@@ -23,7 +24,7 @@ public class RsaDecryptorTest {
     private RsaDecryptor rsaDecryptor;
 
     @Test
-    public void itReturnsTrueWhenDecryptedStringMatchesOriginalString() throws Exception {
+    void itReturnsTrueWhenDecryptedStringMatchesOriginalString() throws Exception {
         String originalString = "This is a test string";
         Optional<String> encryptedOptional =
                 rsaEncryptor.encrypt(originalString, Cipher.getInstance("RSA/NONE/OAEPWithSHA256AndMGF1Padding"));
@@ -37,7 +38,7 @@ public class RsaDecryptorTest {
     }
 
     @Test
-    public void itThrowsExceptionWhenDecryptedWithDifferentPrivateKey() throws Exception {
+    void itThrowsExceptionWhenDecryptedWithDifferentPrivateKey() throws Exception {
         KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
         RsaDecryptor differentPrivateKey = new RsaDecryptor(keyPair.getPrivate(), true);
 
@@ -54,7 +55,7 @@ public class RsaDecryptorTest {
     }
 
     @Test
-    public void itCanNotDecryptWithIncorrectCipher() throws Exception {
+    void itCanNotDecryptWithIncorrectCipher() throws Exception {
         String originalString = "This is a test string";
 
         Optional<String> encryptedOptional =
