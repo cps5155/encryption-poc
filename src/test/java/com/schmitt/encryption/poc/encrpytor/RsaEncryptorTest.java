@@ -1,14 +1,13 @@
 package com.schmitt.encryption.poc.encrpytor;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.schmitt.encryption.poc.encryptor.RsaEncryptor;
+import java.util.Optional;
+import javax.crypto.Cipher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.crypto.Cipher;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class RsaEncryptorTest {

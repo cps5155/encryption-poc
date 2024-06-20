@@ -26,7 +26,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.OAEPParameterSpec;
 import javax.crypto.spec.PSource;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -46,13 +45,11 @@ public class PrivateKeyConfig {
     @Value("${app.keystore.alias}")
     private String keystoreAlias;
 
-    @Autowired
-    private Base64Decoder base64Decoder;
-
     @Bean
     public KeyPair keyPair() throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException {
-
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
+
+        Base64Decoder base64Decoder = base64Decoder();
 
         try {
             base64Decoder.decodeFile();
@@ -71,6 +68,11 @@ public class PrivateKeyConfig {
         PublicKey publicKey = cert.getPublicKey();
 
         return new KeyPair(publicKey, (PrivateKey) privateKey);
+    }
+
+    @Bean
+    public Base64Decoder base64Decoder() {
+        return new Base64Decoder();
     }
 
     @Bean
