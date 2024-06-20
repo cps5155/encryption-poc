@@ -2,7 +2,6 @@ package com.schmitt.encryption.poc.cipher;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -12,9 +11,6 @@ import java.util.Optional;
 
 @Slf4j
 public class OaepWithSha256AndMgf1PaddingCipherFactory implements CipherFactory {
-
-    @Value("${app.cipher.padding.schema}")
-    private String cipherPaddingSchema;
 
     public OaepWithSha256AndMgf1PaddingCipherFactory(BouncyCastleProvider bcProvider) {
         // do nothing
@@ -27,7 +23,7 @@ public class OaepWithSha256AndMgf1PaddingCipherFactory implements CipherFactory 
         Cipher cipher = null;
 
         try {
-            cipher = Cipher.getInstance(cipherPaddingSchema, BouncyCastleProvider.PROVIDER_NAME);
+            cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA256AndMGF1Padding", BouncyCastleProvider.PROVIDER_NAME);
         } catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException e) {
             log.error("Failed to instantiate new OAEPWithSHA256AndMGF1Padding Cipher: {}", e.getMessage());
         }

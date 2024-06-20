@@ -47,9 +47,6 @@ public class PrivateKeyConfig {
     @Value("${app.keystore.alias}")
     private String keystoreAlias;
 
-    @Value("${app.cipher.padding.schema}")
-    private String cipherPaddingSchema;
-
     @Autowired
     private Base64Decoder base64Decoder;
 
@@ -92,7 +89,7 @@ public class PrivateKeyConfig {
     public Cipher rsaCipher() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
         Security.addProvider(new BouncyCastleProvider());
 
-        return Cipher.getInstance(cipherPaddingSchema, "BC");
+        return Cipher.getInstance("RSA/NONE/OAEPWithSHA256AndMGF1Padding", "BC");
     }
 
     @Bean
