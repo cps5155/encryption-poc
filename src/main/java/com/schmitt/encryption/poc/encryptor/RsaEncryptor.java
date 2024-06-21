@@ -48,7 +48,7 @@ public class RsaEncryptor implements Encryptor {
         return Optional.empty();
     }
 
-    private Optional<String> encryptUsingInitializedCipher(String plaintextContent, Cipher initializedCipher) {
+    protected Optional<String> encryptUsingInitializedCipher(String plaintextContent, Cipher initializedCipher) {
         String encryptedContent = null;
 
         try {
